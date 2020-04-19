@@ -1,10 +1,7 @@
+---
+# tasks file for java
 - debug:
     msg: "Master JDK Location [ {{ jdk_location }} ]"
-- name: Installing Unzip
-  apt:
-    name: unzip
-    state: present
-    update_cache: True    
 - name: Ensure jvm directory exists
   file:
     path: /usr/jvm

@@ -1,5 +1,6 @@
 - name: Playbook-Main
   hosts: all
   become: yes
-  tasks:
-    - include: playbook-java.yaml
+  roles:
+    - prerequisites
+    - java

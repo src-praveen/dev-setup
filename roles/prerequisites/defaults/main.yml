@@ -1,0 +1,7 @@
+---
+# defaults file for prerequisites
+prereq_packages:
+  - sublime-text
+  - google-chrome-stable
+  - git
+  - unzip

@@ -1,2 +1,4 @@
+---
+# defaults file for java
 jdk_version: jdk1.8.0_162
 jdk_location: "/Userdisk/Software/JAVA/{{ jdk_version }}.zip"
