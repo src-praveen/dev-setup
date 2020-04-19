@@ -1,18 +1,51 @@
+- debug:
+    msg: "Master JDK Location [ {{ jdk_location }} ]"
+- name: Installing Unzip
+  apt:
+    name: unzip
+    state: present
+    update_cache: True    
+- name: Ensure jvm directory exists
+  file:
+    path: /usr/jvm
+    state: directory
+    mode: "0755"
 - name: Copy Zipped JDK from the master machine to hosts
-  copy:
-    # jdk zip from the ansible master machine the path may differ on actual env.
-    src: '{{jdk_location}}'
-    dest: /usr/jvm/jdk1.8.0_162.zip
-    mode: '0755'
+  copy:    
+    src: '{{ jdk_location }}'
+    dest: "/usr/jvm/{{ jdk_version }}.zip"
+    mode: '0755'       
 - name: Extracting the JDK files
   unarchive:
-    src: /usr/jvm/jdk1.8.0_162.zip
-    dest: /usr/jvm/
+    src: "/usr/jvm/{{ jdk_version }}.zip"   
+    dest: /usr/jvm/  
+    remote_src: True
 - name: Setup default java version using alternative command
   alternatives:
+    link: /usr/bin/java
     name: java
-    path: /usr/jvm/jdk1.8.0_162/bin/java
+    path: "/usr/jvm/{{ jdk_version }}/bin/java"
+- name: Check Java Home already set or not
+  shell: grep -i "JAVA_HOME=" /etc/profile | cat
+  register: java_home_grep
+- debug:
+    var: java_home_grep.stdout
 - name: Setup JAVA_HOME
-  shell:
-  environment:
-    JAVA_HOME: /usr/jvm/jdk1.8.0_162                   
+  lineinfile:
+    path: /etc/profile
+    line: "export JAVA_HOME=/usr/jvm/{{ jdk_version }}"
+  when: java_home_grep.stdout == ""
+- name: Check Java Path already set or not
+  shell: grep -i "JAVA_HOME/bin" /etc/profile | cat
+  register: java_home_path_grep
+- debug:
+    var: java_home_path_grep.stdout   
+- name: Setup JAVA_HOME to the PATH
+  lineinfile:
+    path: /etc/profile
+    line: "export PATH=$PATH:$JAVA_HOME/bin"
+  when: java_home_path_grep.stdout == ""
+- name: Deleting the JDK Zip file
+  file:
+    path: "/usr/jvm/{{ jdk_version }}.zip"
+    state: absent                          
