@@ -1,22 +1,18 @@
-- name: Playbook-Java
-  hosts: all
-  become: yes
-  tasks:
-    - name: Copy Zipped JDK from the master machine to hosts
-      copy:
-        # jdk zip from the ansible master machine the path may differ on actual env.
-        src: '{{jdk_location}}'
-        dest: /usr/jvm/jdk1.8.0_162.zip
-        mode: '0755'
-    - name: Extracting the JDK files
-      unarchive:
-        src: /usr/jvm/jdk1.8.0_162.zip
-        dest: /usr/jvm/
-    - name: Setup default java version using alternative command
-      alternatives:
-        name: java
-        path: /usr/jvm/jdk1.8.0_162/bin/java
-    - name: Setup JAVA_HOME
-      shell:
-      environment:
-        JAVA_HOME: /usr/jvm/jdk1.8.0_162                   
+- name: Copy Zipped JDK from the master machine to hosts
+  copy:
+    # jdk zip from the ansible master machine the path may differ on actual env.
+    src: '{{jdk_location}}'
+    dest: /usr/jvm/jdk1.8.0_162.zip
+    mode: '0755'
+- name: Extracting the JDK files
+  unarchive:
+    src: /usr/jvm/jdk1.8.0_162.zip
+    dest: /usr/jvm/
+- name: Setup default java version using alternative command
+  alternatives:
+    name: java
+    path: /usr/jvm/jdk1.8.0_162/bin/java
+- name: Setup JAVA_HOME
+  shell:
+  environment:
+    JAVA_HOME: /usr/jvm/jdk1.8.0_162                   
