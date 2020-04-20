@@ -1,7 +1,21 @@
 ---
 # defaults file for prerequisites
-prereq_packages:
-  - sublime-text
-  - google-chrome-stable
-  - git
-  - unzip
+packages:
+  - name: gnupg
+    havingDeBFile: False
+    debPath: ''    
+    state: present
+    cacheUpdate: True
+    installDependency: True
+  - name: unzip
+    havingDeBFile: False
+    debPath: ''    
+    state: present
+    cacheUpdate: True
+    installDependency: True
+  - name: git
+    havingDeBFile: False
+    debPath: ''    
+    state: present
+    cacheUpdate: True
+    installDependency: True
